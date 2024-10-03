@@ -19,6 +19,30 @@ class NEAT:
         self.species: list[Species] = []
         self.connections: list[ConnectionGene] = []
         
+    def save_genomes(self):
+        raise NotImplementedError()
+    
+    def load_genomes(self):
+        raise NotImplementedError()
+        
+    def start_training(self):
+        self.initiate_genomes()
+
+        for i in range(self.config.n_generations):
+            print(f"Generation {i} starts gaming!")
+            self.test_genomes()
+            # TODO: Breed and destroy old generation
+            for genome in self.genomes:
+                rand_num = random.uniform(0, 1)
+                if rand_num < self.config.probability_node_mut:
+                    genome.add_node_mutation()
+                rand_num = random.uniform(0, 1)
+                if rand_num < self.config.probability_weight_mut:
+                    genome.weight_mutation()
+                rand_num = random.uniform(0, 1)
+                if rand_num < self.config.probability_connection_mut:
+                    genome.add_connection_mutation()
+        
     def check_existing_connections(self, node1: int, node2: int):
         for connection in self.connections:
             if connection.in_node.id == node1 and connection.out_node.id == node2:
