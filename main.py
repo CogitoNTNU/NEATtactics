@@ -15,24 +15,24 @@ def play_genome(args):
 
     if args.to_gen is not None:
         from_gen = args.from_gen if args.from_gen is not None else 0
-        test_genome(from_gen, args.to_gen, neat_name)
+        test_genome(from_gen, args.to_gen, neat_name, visualize=args.visualize)
         return
     
     if args.from_gen is not None:
         latest_gen = get_latest_generation(neat_name)
-        test_genome(args.from_gen, latest_gen, neat_name)
+        test_genome(args.from_gen, latest_gen, neat_name, visualize=args.visualize)
         return
     
     genome = load_best_genome(args.generation if args.generation is not None else -1, neat_name)
     env, state = env_debug_init()
-    run_game_debug(env, state, genome, neat_name, visualize=True)
+    run_game_debug(env, state, genome, neat_name, visualize=args.visualize)
 
-def test_genome(from_gen: int, to_gen: int, neat_name: str):
+def test_genome(from_gen: int, to_gen: int, neat_name: str, visualize: bool):
     for i in range(from_gen, to_gen + 1):
         print(f"Testing genome {i}...")
         genome = load_best_genome(i, neat_name)
         env, state = env_debug_init()
-        fitness = run_game_debug(env, state, genome, neat_name)
+        fitness = run_game_debug(env, state, genome, neat_name, visualize=visualize)
         print(fitness)
 
 
@@ -165,6 +165,7 @@ def command_line_interface():
     play_parser.add_argument('-g', '--generation', type=int, help="The generation of the genome to play")
     play_parser.add_argument('-f', '--from_gen', type=int, help="The starting genome to test")
     play_parser.add_argument('-t', '--to_gen', type=int, help="The ending genome to test (exclusive)")
+    play_parser.add_argument('-v', '--visualize', action='store_true', help="Create visualization of genome every 10 frames")
 
     playback_parser = subparsers.add_parser('playback', help="Play back the best genome from the lastest generation on an environment of your choice")
     playback_parser.add_argument('-g', '--generation', type=int, help="The generation of the genome to play")
