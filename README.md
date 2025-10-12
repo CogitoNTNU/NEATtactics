@@ -19,13 +19,11 @@
   - [Description](#description)
     - [Prerequisites](#prerequisites)
   - [Getting started](#getting-started)
-    - [Note on venv](#note-on-venv)
   - [Usage](#usage)
     - [Basic Command](#basic-command)
     - [Example Commands](#example-commands)
     - [Command Descriptions](#command-descriptions)
       - [Train](#train)
-      - [Test](#test)
       - [Graph](#graph)
       - [Play](#play)
   - [Testing](#testing)
@@ -58,11 +56,10 @@ In this project, we will:
 
 Join us in exploring the fascinating world of neuroevolution and AI-driven gameplay!
 
-
 ### Prerequisites
 
 - Ensure that git is installed on your machine. [Download Git](https://git-scm.com/downloads)
-- Ensure that you are using python version==3.8.x. [Download Python](https://www.python.org/downloads/)
+- Ensure that you have `uv` installed [install uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 ## Getting started
 
@@ -78,41 +75,13 @@ Next, navigate to the project directory:
 cd NEATtactics
 ```
 
-Create a virtual environment to manage the project dependencies:
+Use `uv` to create a virtual environment with all required dependencies:
 
 ```bash
-python -m venv venv
-```
-
-Activate the virtual environment on Mac/Linux:
-
-```bash
-source venv/bin/activate
-```
-
-Alternatively use this command on windows:
-
-```bash
-venv\Scripts\activate
-```
-
-Install the project dependencies:
-
-```bash
-pip install -r requirements.txt
+uv sync
 ```
 
 Now you are ready to run the project!
-
-### Note on venv
-
-You will need to activate the virtual environment for each new shell session.
-If you want to deactivate the virtual environment, you can do so by either closing the terminal or
-running the following command:
-
-```bash
-deactivate
-```
 
 ## Usage
 
@@ -121,7 +90,7 @@ The project can be run from the command line using the `main.py` script. The scr
 ### Basic Command
 
 ```zsh
-python main.py <command> [options]
+uv run main.py <command> [options]
 ```
 
 ### Example Commands
@@ -129,25 +98,19 @@ python main.py <command> [options]
 - Train genomes:
 
 ```zsh
-python main.py train --neat_name my_saved_neat --extra_number 100
-```
-
-- Test genomes:
-
-```zsh
-python main.py test 0 10
+uv run main.py --neat_name my_saved_neat train --n_generations 100
 ```
 
 - Graph fitness data:
 
 ```zsh
-python main.py graph
+uv run main.py --neat_name my_saved_neat graph
 ```
 
 Play the best genome:
 
 ```zsh
-python main.py play --best
+uv run main.py --neat_name my_saved_neat play
 ```
 
 ### Command Descriptions
@@ -157,28 +120,13 @@ python main.py play --best
 The `train` command initializes and trains genomes using the NEAT algorithm. It supports the following options:
 
 - `--neat_name`: The name of a previously trained NEAT object located in the `trained_population` directory (default: empty string).
-- `extra_number`: An optional parameter specifying the number of generations for training (default: 0). If not specified, the configuration’s default number of generations will be used.
+- `--n_generations`: An optional parameter specifying the number of generations for training (default: 0). If not specified, the configuration’s default number of generations will be used.
 
 Example:
 
 ```zsh
-python main.py train --neat_name my_neat_population --extra_number 50
+uv run main.py --neat_name my_neat_population train --n_generations 50
 ```
-
-#### Test
-
-The `test` command tests a range of genomes in the environment. The command accepts:
-
-- `from_gen`: The starting generation number.
-- `to_gen`: The ending generation number (inclusive).
-
-Example:
-
-```zsh
-python main.py test 0 5
-```
-
-This will test genomes from generation 0 up to generation 5.
 
 #### Graph
 
@@ -193,7 +141,7 @@ The `graph` command visualizes the fitness data accumulated during training. Whe
 Example:
 
 ```zsh
-python main.py graph
+uv run main.py graph
 ```
 
 Ensure that `fitness_values.txt` exists in the `data/fitness` directory before running this command, as it is the source file for generating the graph.
@@ -210,19 +158,13 @@ The `play` command runs the environment using the best genome from the most rece
 - To play the best genome from the latest generation:
 
 ```zsh
-python main.py play --best
+uv run main.py play
 ```
 
-- To play the genome from a specific generation (e.g., generation 10):
+- To play the best genome from a specific generation (e.g., generation 10):
 
 ```zsh
-python main.py play --generation 10
-```
-
-- To play the best genome from generation 10:
-
-```zsh
-python main.py play --generation 10 --best
+uv run main.py play -f 10 -t 10
 ```
 
 This flexibility allows you to test and visualize the performance of genomes from different stages of evolution.
@@ -232,14 +174,14 @@ This flexibility allows you to test and visualize the performance of genomes fro
 To run the test suite, run the following command from the root directory of the project:
 
 ```bash
-pytest
+uv run pytest
 ```
 
 To get a detailed report of the test coverage, run the following commands:
 
 ```bash
-coverage run --source=src -m pytest
-coverage html
+uv run coverage run --source=src -m pytest
+uv run coverage html
 ```
 
 Next, open the `htmlcov/index.html` file in your browser to view the
@@ -252,7 +194,7 @@ open htmlcov/index.html
 You might want to clean up the coverage files before running the tests again. To do this, run the following commands:
 
 ```bash
-coverage erase
+uv run coverage erase
 rm -rf htmlcov
 ```
 
@@ -261,7 +203,7 @@ rm -rf htmlcov
 When first installing the project, it is advised to run the following tests:
 
 ```bash
-pytest -m "environment"
+uv run pytest -m "environment"
 ```
 
 Which will check for CUDA compatibility and the current OS.
