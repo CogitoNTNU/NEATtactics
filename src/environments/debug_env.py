@@ -43,7 +43,7 @@ def run_game_debug(env: MarioJoypadSpace, initial_state: np.ndarray, genome: Gen
         # timeout = 600 + sr.info["x_pos"]
         if visualize and i % 10 == 0:
             save_state_as_png(i, sr.state, neat_name)
-            visualize_genome(genome, neat_name, 0)
+            visualize_genome(genome, neat_name, i)
         
         fitness.calculate_fitness(sr.info, action)
 
