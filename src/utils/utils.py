@@ -19,7 +19,7 @@ def save_state_as_png(i, state: np.ndarray, neat_name: str) -> None:
     directory = f"./data/{neat_name}/mario_frames"
     if not os.path.exists(directory):
         os.makedirs(directory)
-    plt.imsave(f"{directory}/frame{i}.png", state, cmap='gray', vmin=0, vmax=1)
+    plt.imsave(f"{directory}/frame{i}.png", state.squeeze(), cmap='gray', vmin=0, vmax=1)
 
 def normalize_positive_values(positive_vals: np.ndarray) -> None:
     """Takes an ndarray with positive floats as inputs,
